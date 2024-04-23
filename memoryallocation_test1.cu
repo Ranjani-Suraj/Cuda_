@@ -31,15 +31,24 @@ __global__ void get_counts(int[][] args, int num_args, int* counts){
         }
     }
     cudaDeviceProp devicePropv;
-    int max = devicePropv.maxThreadsPerBlock
+    int max_gpu = devicePropv.maxThreadsPerBlock
 
-    if(max>256){
+    if(max>max_gpu){
         counts[0] = ceil((double)max/(double)256);
-        counts[1] = 256
+        counts[1] = max_gpu
     }
     else{
         counts[0] = 1;
-        counts[1] = size;
+        if (size%32 == 0){
+            counts[1] = size;
+        }
+        else {
+            while (size%32 != 0){
+                size+=1
+            }
+            counts[1] = size;
+        }
+        
     }
 }
 
@@ -162,13 +171,3 @@ __global__ void get_counts(int[][] args, int num_args, int* counts){
 // memoryallocation.cu g++ -o test memoryallocation.cpp alg.cpp test.cpp matrix_cuda.o 
 // -L/usr/local/cuda-7.5/lib64  -I/usr/local/cuda-7.5/include -lopenblas -lpthread -lcudart -lcublas  -fopenmp -O3 -Wextra -std=c++11
 
-
-$ nvcc   -rdc=true -c -o temp.o memoryallocation.cu
-$ nvcc -dlink -o memoryallocation.o temp.o -lcudart
-$ rm -f libgpu.a
-$ ar cru libgpu.a memoryallocation.o temp.o
-
-$ ranlib libgpu.a
-$ g++ main.cpp -L. -lgpu -o main -L/usr/local/cuda/lib64 -lcudart
-$ ./main
-$
