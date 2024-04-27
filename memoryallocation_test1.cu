@@ -1,9 +1,9 @@
 //WE START BY Developing a function that takes in a starting variable, a condition, 
 #include <memory>
 #include <iostream>
-
+#include <cstdio>
 #include <cuda_runtime.h>
-#include <helper_cuda.h>
+//#include <helper_cuda.h>
 #include <cuda.h>
 
 __global__ void get_i(dim3 _threadIdx, dim3 _blockIdx, dim3 _blockDim, int dimensions, int* result)
@@ -22,31 +22,35 @@ __global__ void get_i(dim3 _threadIdx, dim3 _blockIdx, dim3 _blockDim, int dimen
     }
 }
 
-__global__ void get_counts(int[][] args, int num_args, int* counts){
+__global__ void get_counts(void** args, int num_args, int* counts){
     int max = 0;
-    for (int i = 0; i<num_args; i+=1){
-        int size = size(args[i]);
-        if(size>max){
-            max = size;
+    int size_arg;
+    for (int i = 0; i < num_args; i+=1){
+        size_arg = sizeof(args[i]);
+        if(size_arg>max){
+            max = size_arg;
         }
     }
     cudaDeviceProp devicePropv;
-    int max_gpu = devicePropv.maxThreadsPerBlock
+    cudaGetDeviceProperties(&devicePropv, 0);
+    int max_gpu = devicePropv.maxThreadsPerBlock;
+
+    //int max_gpu must be a multiple of 32;
 
     if(max>max_gpu){
         counts[0] = ceil((double)max/(double)256);
-        counts[1] = max_gpu
+        counts[1] = max_gpu;
     }
     else{
         counts[0] = 1;
-        if (size%32 == 0){
-            counts[1] = size;
+        if (size_arg%32 == 0){
+            counts[1] = size_arg;
         }
         else {
-            while (size%32 != 0){
-                size+=1
+            while (size_arg%32 != 0){
+                size_arg+=1;
             }
-            counts[1] = size;
+            counts[1] = size_arg;
         }
         
     }
