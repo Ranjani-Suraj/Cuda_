@@ -6,15 +6,18 @@ The above code has 2 main functions that are intended to aid CUDA users that are
 
 Once you have downloaded the code to your system, run the following code on your command line:
 
-$ nvcc   -rdc=true -c -o temp.o memoryallocation.cu
-$ nvcc -dlink -o memoryallocation.o temp.o -lcudart
-$ rm -f libgpu.a
-$ ar cru libgpu.a memoryallocation.o temp.o
-This will create a library so that you can use the code. 
+$ nvcc   -rdc=true -c -o temp.o memoryallocation_test1.cu  \n
 
-After that, if you want to run code using these synntax changes, you need to run youe file using the following code  on you command line (assuming you are using cpp). An example of the usage of this code is given in main.cpp.
+$ nvcc -dlink -o memoryallocation_test1.o temp.o -       \n
+$ rm -f libgpu.a   \n
+$ ar cru libgpu.a memoryallocation_test1.o temp.o \n
+This will create a library so that you can use the code. \n
 
-$ ranlib libgpu.a
-$ g++ main.cpp -L. -lgpu -o main -L/usr/local/cuda/lib64 -lcudart
-$ ./main
-$
+After that, if you want to run code using these syntax changes, you need to run your file using the following code on your command line (assuming you are using cpp). An example of the usage of this code is given in main.cpp. \n
+
+$ ranlib libgpu.a \n
+$ g++ main.cpp -L. -lgpu -o main -L/usr/local/cuda/lib64 -lcudart \n
+$ ./main \n
+$ \n
+
+ 
