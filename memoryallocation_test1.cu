@@ -60,7 +60,7 @@ __global__ void get_counts(void** args, int num_args, int* counts){
 //__global__ void loop(int args[][], pointFunction_t kernel_func, void* output){
 //    int* counts;
 //    get_counts(args, size(args), counts);
-    //HOW DO I PASS ARGUMENTS WTF
+    //
     //*output = kernel_func<<<counts[0], counts[1]>>>();
 //}
 
